@@ -1,20 +1,10 @@
 # CLAUDE.md
 
-abc-scaffold is a project starter that provides the Amy/Bob/Con agent team for any project. Clone it, describe what you want to build, and call @Amy to kick off development.
-
-## Quick Start
-
-```bash
-git clone <this-repo> my-new-project
-cd my-new-project
-rm -rf .git && git init && git checkout -b main
-# Edit Cargo.toml (or replace with your language's config)
-# Call @Amy with your first task
-```
+abc-scaffold provides the Amy/Bob/Con agent team for any project. The workflow below is the core — the build tooling is just a default starting point.
 
 ## Commands
 
-Default build commands (Rust). Replace with your project's equivalents.
+Defaults to Rust. Replace with your project's equivalents after scaffolding.
 
 ```bash
 make build       # debug build
@@ -28,9 +18,7 @@ make hooks       # install git pre-push hook
 
 ## Architecture
 
-Default: Rust binary. Entry point: `src/main.rs`. Add modules under `src/` as needed.
-
-Replace with whatever language and structure your project needs — the scaffold's value is the workflow below, not the starter code.
+Default: Rust binary. Entry point `src/main.rs`. Replace with whatever your project needs.
 
 ## Agents
 
@@ -91,5 +79,5 @@ Con is the gatekeeper before anything merges.
 ## Workflow
 
 ```
-Amy clarifies -> Amy confirms task -> [continues as Bob] -> Bob implements -> [continues as Con] -> Con reviews -> Con merges + cleans up branch
+Amy clarifies -> Amy confirms -> Bob implements -> Con reviews -> Con merges + cleans up
 ```
