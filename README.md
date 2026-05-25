@@ -8,27 +8,33 @@ A project starter built around the **Amy / Bob / Con** agent team. Clone it, sta
 | **Bob** | Engineer — implements on a feature branch, opens a PR |
 | **Con** | Reviewer — reviews, approves, merges, cleans up |
 
-## Usage
+## Quick Start
 
 ```bash
-git clone https://github.com/your-org/abc-scaffold my-new-project
+./start.sh my-new-project
 cd my-new-project
-rm -rf .git && git init && git checkout -b main
-git add -A && git commit -m "init from abc-scaffold"
 ```
 
-Then open Claude Code and say:
+Or from anywhere via curl:
+
+```bash
+curl -sL https://raw.githubusercontent.com/Laotree/abc-scaffold/main/start.sh | bash -s my-new-project
+cd my-new-project
+```
+
+That's it — clean git repo, project renamed, ready to go. Open Claude Code and say:
 
 ```
 @Amy I want to build ...
 ```
 
-Amy will clarify your requirements, hand off to Bob for implementation, and Bob hands off to Con for review. The full cycle runs in one conversation.
+Amy clarifies your requirements, hands off to Bob for implementation, Bob hands off to Con for review. The full cycle runs in one conversation.
 
 ## What's Included
 
 ```
 abc-scaffold/
+├── start.sh                         # One command to create a new project
 ├── CLAUDE.md                        # Agent workflow — Amy/Bob/Con instructions
 ├── Makefile                         # build / test / lint / fmt / hooks
 ├── hooks/pre-push                   # Blocks direct push to main (PRs only)
