@@ -1,0 +1,66 @@
+# abc-scaffold release workflow
+# Triggered by pushing a tag like v1.0.0.
+# Uncomment and adapt the sections for your project's language and build system.
+
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+# env:
+#   BINARY: my-project
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Verify the tag version matches your project config
+  # ---------------------------------------------------------------------------
+  # verify:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: |
+  #         TAG_VER="${GITHUB_REF_NAME#v}"
+  #         # For Rust: grep Cargo.toml
+  #         # For Node: jq .version package.json
+  #         # For Python: grep version pyproject.toml
+  #         echo "Tag version: $TAG_VER"
+
+  # ---------------------------------------------------------------------------
+  # 2. Build
+  # ---------------------------------------------------------------------------
+  # build:
+  #   needs: verify
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: echo "Add your build steps here"
+
+  # ---------------------------------------------------------------------------
+  # 3. Publish GitHub Release
+  # ---------------------------------------------------------------------------
+  # github-release:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: softprops/action-gh-release@v2
+  #       with:
+  #         generate_release_notes: true
+
+  # ---------------------------------------------------------------------------
+  # 4. Publish to package registry (crates.io / npm / PyPI / etc.)
+  # ---------------------------------------------------------------------------
+  # publish:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: echo "Add your publish steps here"
+
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "abc-scaffold release workflow — uncomment and adapt the jobs above"
