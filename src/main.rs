@@ -9,7 +9,7 @@
 use std::{
     fs,
     io::{self, Stdout},
-    path::{Path, PathBuf},
+    path::Path,
     process::Command,
 };
 
@@ -191,13 +191,14 @@ fn teardown(term: &mut Term) -> io::Result<()> {
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
 
+    let cwd = std::env::current_dir()?;
     let initial_lang = cli.lang.as_ref().map(lang_index);
 
     // Fully non-interactive path
     if let (Some(name), Some(lang_idx), true) = (&cli.name, initial_lang, cli.yes) {
         let lang = &ALL_LANGS[lang_idx];
         println!("Creating {} ({})…", name, lang.label());
-        scaffold(name, lang)?;
+        scaffold(&cwd, name, lang)?;
         println!(
             "✅  Done!  cd {}  and call @Amy with your first task.",
             name
@@ -208,7 +209,7 @@ fn main() -> io::Result<()> {
     // TUI path
     let mut app = App::new(cli.name.clone(), initial_lang);
     let mut term = setup()?;
-    let result = run(&mut term, &mut app);
+    let result = run(&mut term, &mut app, &cwd);
     teardown(&mut term)?;
 
     if let Err(e) = result {
@@ -226,7 +227,7 @@ fn main() -> io::Result<()> {
 
 // ─── Event loop ───────────────────────────────────────────────────────────────
 
-fn run(term: &mut Term, app: &mut App) -> io::Result<()> {
+fn run(term: &mut Term, app: &mut App, base: &Path) -> io::Result<()> {
     loop {
         term.draw(|f| ui(f, app))?;
 
@@ -244,7 +245,7 @@ fn run(term: &mut Term, app: &mut App) -> io::Result<()> {
             match app.screen {
                 Screen::NameInput => handle_name_input(app, key.code),
                 Screen::LangSelect => handle_lang_select(app, key.code),
-                Screen::Confirm => handle_confirm(app, term, key.code)?,
+                Screen::Confirm => handle_confirm(app, term, base, key.code)?,
                 Screen::Done => {
                     app.quit = true; // any key exits
                 }
@@ -289,7 +290,7 @@ fn handle_lang_select(app: &mut App, key: KeyCode) {
     }
 }
 
-fn handle_confirm(app: &mut App, term: &mut Term, key: KeyCode) -> io::Result<()> {
+fn handle_confirm(app: &mut App, term: &mut Term, base: &Path, key: KeyCode) -> io::Result<()> {
     match key {
         KeyCode::Enter | KeyCode::Char('y') | KeyCode::Char('Y') => {
             // Show a "working…" frame before blocking on disk I/O
@@ -300,7 +301,7 @@ fn handle_confirm(app: &mut App, term: &mut Term, key: KeyCode) -> io::Result<()
             let name = app.name.clone();
             let lang = app.selected_lang().clone();
 
-            match scaffold(&name, &lang) {
+            match scaffold(base, &name, &lang) {
                 Ok(()) => {
                     app.done_msg = format!(
                         "✅  Project '{}' created!\n\n  cd {}\n  # call @Amy with your first task",
@@ -548,8 +549,8 @@ fn render_done(f: &mut Frame, area: ratatui::layout::Rect, app: &App) {
 
 // ─── Scaffolding ──────────────────────────────────────────────────────────────
 
-fn scaffold(name: &str, lang: &Lang) -> io::Result<()> {
-    let dir = PathBuf::from(name);
+fn scaffold(base: &Path, name: &str, lang: &Lang) -> io::Result<()> {
+    let dir = base.join(name);
 
     if dir.exists() {
         return Err(io::Error::new(
