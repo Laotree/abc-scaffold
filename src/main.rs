@@ -660,7 +660,7 @@ make hooks       # install git pre-push hook
 make build       # go build
 make test        # go test ./...
 make lint        # golangci-lint run
-make fmt         # gofmt -w .
+make fmt         # go fmt ./...
 make clean       # remove build artifacts
 make hooks       # install git pre-push hook
 ```"#
@@ -849,7 +849,7 @@ lint:
 	golangci-lint run
 
 fmt:
-	gofmt -w .
+	go fmt ./...
 
 clean:
 	rm -f {name}
