@@ -414,10 +414,11 @@ fn render_name_input(f: &mut Frame, area: ratatui::layout::Rect, app: &App) {
         chunks[0],
     );
 
-    // Fake block cursor at the end
-    let display = format!("{}_", app.name);
+    // Position the real terminal cursor at the end of the input
+    f.set_cursor_position((chunks[1].x + 1 + app.name.len() as u16, chunks[1].y + 1));
+
     f.render_widget(
-        Paragraph::new(display.as_str())
+        Paragraph::new(app.name.as_str())
             .block(
                 Block::default()
                     .borders(Borders::ALL)
