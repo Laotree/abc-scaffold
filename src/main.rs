@@ -914,7 +914,21 @@ hooks:
 const TMPL_PRE_PUSH: &str = r#"#!/usr/bin/env bash
 # Installed by: make hooks
 set -euo pipefail
-echo "pre-push: checks passed"
+
+protected="^(main|master)$"
+
+while read -r _local_ref _local_sha _remote_ref _remote_sha; do
+    branch="${_remote_ref#refs/heads/}"
+    if [[ "$branch" =~ $protected ]]; then
+        echo ""
+        echo "  Direct push to '$branch' is not allowed."
+        echo "  Open a PR instead."
+        echo ""
+        exit 1
+    fi
+done
+
+exit 0
 "#;
 
 fn tmpl_rust_cargo(name: &str) -> String {
